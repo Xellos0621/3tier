@@ -102,7 +102,8 @@ resource "aws_route_table_association" "main_public_2a" {
   route_table_id = aws_route_table.main_public.id
 }
 
-resource "aws_elb" "name" {
+resource "aws_alb" "public_alb" {
+  name = "pubic_alb"
   subnets = ["${aws_subnet.public_sub_1}", "${aws_subnet.public_sub_2}"]
-  
+
 }
