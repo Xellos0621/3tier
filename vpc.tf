@@ -102,8 +102,11 @@ resource "aws_route_table_association" "main_public_2a" {
   route_table_id = aws_route_table.main_public.id
 }
 
-resource "aws_alb" "public_alb" {
-  name = "pubic_alb"
-  subnets = ["${aws_subnet.public_sub_1}", "${aws_subnet.public_sub_2}"]
+resource "aws_alb" "public-alb01" {
+  name = "pubic-alb01"
+  subnets = ["${aws_subnet.public_sub_1.vpc_id}", "${aws_subnet.public_sub_2.vpc_id}"]
 
+}
+output "subnets" {
+  value = aws_alb.public-alb01.subnets
 }
