@@ -90,6 +90,18 @@ resource "aws_route_table" "main_public" {
     Name = "main_public_1"
   }
 }
+# public 에서 private로 가는 라우팅 테이블
+resource "aws_route_table" "public_to_private" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "10.0.1.0/24"
+    gateway_id = aws_internet_gateway.main-gw.id
+  }
+}
+resource "aws_route_table_association" "public_subnet_association" {
+  subnet_id      = aws_subnet.public_sub_1.id
+  route_table_id = aws_route_table.public_to_private.id
+}
 
 # 퍼플릭 라우팅 연결 수정해야될듯
 resource "aws_route_table_association" "main_public_1a" {
@@ -100,13 +112,4 @@ resource "aws_route_table_association" "main_public_1a" {
 resource "aws_route_table_association" "main_public_2a" {
   subnet_id      = aws_subnet.public_sub_2.id
   route_table_id = aws_route_table.main_public.id
-}
-
-resource "aws_alb" "public-alb01" {
-  name = "pubic-alb01"
-  subnets = ["${aws_subnet.public_sub_1.vpc_id}", "${aws_subnet.public_sub_2.vpc_id}"]
-
-}
-output "subnets" {
-  value = aws_alb.public-alb01.subnets
 }
